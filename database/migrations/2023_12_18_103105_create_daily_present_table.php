@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateDailyPresentTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('daily_present', function (Blueprint $table) {
+            $table->id();
+            $table->integer("status");
+            $table->integer("session", false, true);
+            $table->date("present_date");
+            $table->time("present_time");
+            $table->unsignedBigInteger("employee_id");
+            $table->foreign("employee_id", "Employee Id")->references("id")->on("employees");
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('daily_present');
+    }
+}
