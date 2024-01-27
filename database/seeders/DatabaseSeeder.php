@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $empSeed = new EmployeeLevelSeeder();
+        $empSeed = new EmployeeSeeder();
         $empLvSeed = new EmployeeLevelSeeder();
         $roleSeed = new RoleSeeder();
         $usrEmpSeed = new UserEmployeeSeeder();
@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $empLvSeed->run();
         $empSeed->run();
         $roleSeed->run();
-        $usrEmpSeed->run();
         $usrSeed->run();
+        $usrEmpSeed->run();
     }
 }
