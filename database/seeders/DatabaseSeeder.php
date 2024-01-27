@@ -13,6 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(10)->create();
+        $empSeed = new EmployeeLevelSeeder();
+        $empLvSeed = new EmployeeLevelSeeder();
+        $roleSeed = new RoleSeeder();
+        $usrEmpSeed = new UserEmployeeSeeder();
+        $usrSeed = new UserSeeder();
+
+        $empLvSeed->run();
+        $empSeed->run();
+        $roleSeed->run();
+        $usrEmpSeed->run();
+        $usrSeed->run();
     }
 }
