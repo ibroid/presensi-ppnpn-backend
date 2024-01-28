@@ -28,7 +28,7 @@ class EmployeeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make("fullname")->required(),
-                Forms\Components\TextInput::make("photos")->label("Link Foto (Dari Website Satker)")->required(),
+                Forms\Components\TextInput::make("photos")->label("Link Foto (Dari Website Satker)")->required()->url(),
                 Forms\Components\Select::make("employee_level_id")->label("Employee Level")->relationship("employee_level", "level_name")->required()
             ]);
     }

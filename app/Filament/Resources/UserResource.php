@@ -9,25 +9,27 @@ use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make("name")->required(),
-                TextInput::make("identifier")->required(),
-                TextInput::make("password")->required()->password()
+                TextInput::make("identifier")->required()->unique(table: User::class, column: "identifier"),
+                TextInput::make("password")->required()->dehydrateStateUsing(fn ($state) => Hash::make($state))
             ]);
     }
 
@@ -41,9 +43,11 @@ class UserResource extends Resource
             ->filters([
                 //
             ])
-            ->tabs
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make("Change Password")
+                    ->url(fn (User $record) => self::getUrl("change_password", ["record" => $record]))->color(Color::Rose)
+                    ->icon("heroicon-o-key")
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -65,6 +69,7 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+            'change_password' => Pages\UserChangePassword::route('/{record}/change_password')
         ];
     }
 }
