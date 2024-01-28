@@ -9,4 +9,9 @@ class Employee extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function employee_level()
+    {
+        return $this->belongsTo(EmployeeLevel::class);
+    }
 }
