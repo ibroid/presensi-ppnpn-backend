@@ -19,6 +19,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
+
+
+    protected static ?string $navigationGroup = 'Settings';
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
@@ -28,8 +32,11 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make("name")->required(),
-                TextInput::make("identifier")->required()->unique(table: User::class, column: "identifier"),
-                TextInput::make("password")->required()->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                TextInput::make("identifier")->required()->unique(table: User::class, column: "identifier", ignoreRecord: true),
+                TextInput::make("password")
+                    ->required()
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->hiddenOn("edit"),
             ]);
     }
 
