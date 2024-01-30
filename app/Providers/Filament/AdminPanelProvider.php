@@ -25,6 +25,10 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
+            ->brandName("Presence App")
+            ->brandLogo("/presence_app_logo.jpg")
+            ->brandLogoHeight("60px")
+            ->favicon("/favicon/favicon.ico")
             ->id('admin')
             ->path('admin')
             ->login(CustomLogin::class)

@@ -51,6 +51,8 @@ class DailyPresenceResource extends Resource
 					]),
 				TimePicker::make("present_time")
 					->label("Waktu Presensi")
+					->native(false)
+					->default(now())
 					->required()
 					->timezone('Asia/Jakarta'),
 				DatePicker::make("present_date")
