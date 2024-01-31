@@ -17,7 +17,7 @@ class CreateDailyRecordTable extends Migration
             $table->id();
             $table->unsignedBigInteger("employee_id");
             $table->foreign("employee_id", "Employee Record")->references("id")->on("employees");
-            $table->multiLineString("note");
+            $table->text("note");
             $table->date("record_date");
             $table->time("record_time");
             $table->timestamps();
