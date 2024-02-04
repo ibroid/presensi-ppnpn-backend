@@ -22,7 +22,7 @@ class CreateDailyActivityTable extends Migration
             $table->string("doing", 191);
             $table->date("doing_date");
             $table->time("doing_time");
-            $table->text("note");
+            $table->text("note")->nullable();
             $table->timestamps();
         });
     }

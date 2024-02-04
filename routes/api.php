@@ -25,6 +25,13 @@ Route::get("/app_version", App\Http\Controllers\Api\AppVersionController::class)
 
 Route::post("/login", App\Http\Controllers\Api\LoginController::class);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get("/user", function (Request $request) {
+        return response()->json([
+            "user" => $request->user()->with("employee.employee_level")->with("role")->first()
+        ]);
+    });
+
+    Route::resource("/presence", App\Http\Controllers\Api\PresenceController::class);
+    Route::resource("/activity", App\Http\Controllers\Api\ActivityController::class);
 });

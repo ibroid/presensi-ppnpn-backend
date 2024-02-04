@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('app_version', function (Blueprint $table) {
-            $table->string("status", 64);
+        Schema::table('daily_present', function (Blueprint $table) {
+            $table->string("location", 64);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('app_version', function (Blueprint $table) {
-            $table->dropColumn("status");
+        Schema::table('daily_present', function (Blueprint $table) {
+            $table->dropColumn("location");
         });
     }
 };
