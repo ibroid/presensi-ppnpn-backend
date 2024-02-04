@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Panel;
 use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -47,11 +48,16 @@ class User extends Authenticatable implements FilamentUser
 
     public function employee()
     {
-        return $this->hasOneThrough(Employee::class, "user_employee");
+        return $this->hasOneThrough(Employee::class, UserEmployee::class, "user_id", "id", "id", "employee_id");;
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->role_id == 1;
+    }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 }

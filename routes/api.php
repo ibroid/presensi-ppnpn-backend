@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get("/", function () {
+    return response()->json([
+        "message" => "Welcome to the Presence APP API",
+        "status" => "success"
+    ]);
+});
+
+Route::get("/app_version", App\Http\Controllers\Api\AppVersionController::class);
+
+Route::post("/login", App\Http\Controllers\Api\LoginController::class);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
