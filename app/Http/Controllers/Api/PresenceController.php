@@ -7,6 +7,7 @@ use App\Http\Requests\PresencePostRequest;
 use App\Http\Traits\ErrorResponseJson;
 use App\Models\DailyPresence;
 use Illuminate\Http\Request;
+use League\Uri\Uri;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class PresenceController extends Controller
@@ -18,10 +19,15 @@ class PresenceController extends Controller
     public function index(Request $request)
     {
         try {
-            return response()->json(DailyPresence::where([
+            $queryPresence = DailyPresence::where([
                 "employee_id" => $request->user()->employee->id,
-                "present_date" => date("Y-m-d"),
-            ])->get());
+            ]);
+            if ($request->get("date")) {
+                $queryPresence->whereDate("present_date", explode("T", $request->get("date"))[0]);
+            } else {
+                $queryPresence->whereDate("present_date", now());
+            }
+            return response()->json($queryPresence->get());
         } catch (\Throwable $th) {
             return $this->errorResponse($th, intval($th->getCode()));
         }
@@ -42,10 +48,14 @@ class PresenceController extends Controller
         try {
             $postdata = $request->validated();
 
+            if ($postdata["present_date"] !== date("Y-m-d")) {
+                throw new BadRequestHttpException("Tidak bisa presensi di hari yang lain", null, 400);
+            }
+
             $checkPresent = DailyPresence::where([
                 "employee_id" => $request->user()->employee->id,
                 "session" => $postdata["session"],
-                "present_date" => date("Y-m-d"),
+                "present_date" => $postdata["present_date"],
             ])->first();
 
             if ($checkPresent) {
@@ -56,7 +66,7 @@ class PresenceController extends Controller
                 "session" => $postdata["session"],
                 "location" => $postdata["location"],
                 "employee_id" => $request->user()->employee->id,
-                "present_date" => date("Y-m-d"),
+                "present_date" => $postdata["present_date"],
                 "present_time" => date("H:i:s"),
                 "status" => "1",
             ]);

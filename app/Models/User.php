@@ -42,6 +42,16 @@ class User extends Authenticatable implements FilamentUser
         'password' => 'hashed',
     ];
 
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (User $user) {
+            UserEmployee::where("user_id", $user->id)->delete();
+        });
+    }
+
     public function employee()
     {
         return $this->hasOneThrough(Employee::class, UserEmployee::class, "user_id", "id", "id", "employee_id");;

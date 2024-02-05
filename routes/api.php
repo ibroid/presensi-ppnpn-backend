@@ -22,8 +22,10 @@ Route::get("/", function () {
 });
 
 Route::get("/app_version", App\Http\Controllers\Api\AppVersionController::class);
+Route::get("/pegawais", [App\Http\Controllers\Api\EmployeeController::class, "list"]);
 
 Route::post("/login", App\Http\Controllers\Api\LoginController::class);
+Route::post("/register", App\Http\Controllers\Api\RegisterController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("/user", function (Request $request) {

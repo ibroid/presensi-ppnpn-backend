@@ -15,9 +15,7 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->before(function (User $record): void {
-                UserEmployee::where("user_id", $record->id)->delete();
-            })
+            Actions\DeleteAction::make()
         ];
     }
 }

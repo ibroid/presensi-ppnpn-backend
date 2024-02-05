@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PresencePostRequest extends FormRequest
+class RegisterPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,10 @@ class PresencePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "session" => "required|numeric",
-            "location" => "required|string|max:64",
-            "present_date" => "required|string|max:16",
+            "name" => "required|string|max:64",
+            "employee_id" => "required|numeric",
+            "password" => "required|string|max:64",
+            "identifier" => "required|string|max:16|unique:users,identifier",
         ];
     }
 }
