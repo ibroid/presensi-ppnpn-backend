@@ -36,8 +36,7 @@ class DailyRecordResource extends Resource
                 Select::make("employee_id")
                     ->label("Pilih Pegawai")
                     ->required()
-                    ->options(Employee::where("employee_level_id", "=", 8)->pluck("fullname", "id"))
-                    ->searchable(),
+                    ->options(Employee::where("employee_level_id", "=", 8)->pluck("fullname", "id")),
                 Textarea::make("note")->label("Catatan Security")->required()->placeholder("Apa saja yang terjadi ..."),
                 TimePicker::make("record_time")->default(now())->label("Waktu Kejadian")->required(),
                 DatePicker::make("record_date")->default(now())->label("Tanggal Kejadian")->required(),

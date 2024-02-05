@@ -35,8 +35,7 @@ class DailyActivityResource extends Resource
                 Select::make("employee_id")
                     ->label("Pilih Pegawai")
                     ->required()
-                    ->options(Employee::where("employee_level_id", ">", 5)->pluck("fullname", "id"))
-                    ->searchable(),
+                    ->options(Employee::where("employee_level_id", ">", 5)->pluck("fullname", "id")),
                 TextInput::make("doing")
                     ->label("Kegiatan Yang Dilakukan")
                     ->required()->datalist([

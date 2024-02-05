@@ -68,7 +68,7 @@ class PresenceController extends Controller
                 "employee_id" => $request->user()->employee->id,
                 "present_date" => $postdata["present_date"],
                 "present_time" => date("H:i:s"),
-                "status" => "1",
+                "status" => $postdata["status"],
             ]);
 
             return response()->json([
