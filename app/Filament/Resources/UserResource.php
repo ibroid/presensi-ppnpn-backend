@@ -4,8 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Employee;
+use App\Models\Role;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -36,7 +39,18 @@ class UserResource extends Resource
                 TextInput::make("password")
                     ->required()
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                    ->hiddenOn("edit"),
+                    ->hiddenOn("edit")
+                    ->password()
+                    ->revealable(),
+                Select::make("employee_id")
+                    ->label("Pilih Pegawai")
+                    ->required()
+                    ->options(Employee::where("employee_level_id", ">", 5)->pluck("fullname", "id"))
+                    ->searchable(),
+                Select::make("role_id")
+                    ->label("Pilih Role")
+                    ->required()
+                    ->options(Role::all()->pluck("role_name", "id"))
             ]);
     }
 
