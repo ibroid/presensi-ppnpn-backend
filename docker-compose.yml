@@ -17,12 +17,13 @@ services:
             - presenceapi
 
     db:
-        image: mysql:5.7
+        image: mysql/mysql-server:8.0
         container_name: presence-api-db
         restart: unless-stopped
         environment:
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_HOST: "%"
             MYSQL_PASSWORD: ${DB_PASSWORD}
             MYSQL_USER: ${DB_USERNAME}
             SERVICE_TAGS: dev
