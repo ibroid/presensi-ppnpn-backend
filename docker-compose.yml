@@ -17,7 +17,7 @@ services:
             - presenceapi
 
     db:
-        image: mysql:8.0
+        image: mysql:5.7
         container_name: presence-api-db
         restart: unless-stopped
         environment:
@@ -27,6 +27,8 @@ services:
             MYSQL_USER: ${DB_USERNAME}
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
+        ports:
+            - 3360:3306
         volumes:
             - ./docker/mysql:/docker-entrypoint-initdb.d
         networks:
