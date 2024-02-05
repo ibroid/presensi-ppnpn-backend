@@ -28,7 +28,7 @@ services:
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         volumes:
-            - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+            - ./docker/mysql:/docker-entrypoint-initdb.d
         networks:
             - presenceapi
 
@@ -40,7 +40,7 @@ services:
             - 8000:80
         volumes:
             - ./:/var/www
-            - ./docker-compose/nginx:/etc/nginx/conf.d/
+            - ./docker/nginx:/etc/nginx/conf.d/
         networks:
             - presenceapi
 
