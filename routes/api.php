@@ -29,8 +29,11 @@ Route::post("/register", App\Http\Controllers\Api\RegisterController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get("/user", function (Request $request) {
+        $request->user()->role;
+        $request->user()->employee;
+        $request->user()->employee->employee_level;
         return response()->json([
-            "user" => $request->user()->with("employee.employee_level")->with("role")->first()
+            "user" => $request->user()
         ]);
     });
 
