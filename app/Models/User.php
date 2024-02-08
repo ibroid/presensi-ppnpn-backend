@@ -59,7 +59,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->role_id == 1;
+        return $this->role_id == 1 ||  $this->role_id == 3;
     }
 
     public function role(): BelongsTo

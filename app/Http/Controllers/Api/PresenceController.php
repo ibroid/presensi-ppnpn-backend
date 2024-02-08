@@ -62,6 +62,14 @@ class PresenceController extends Controller
                 throw new BadRequestHttpException("Anda sudah presensi diwaktu ini", null, 400);
             }
 
+            if ($postdata["session"] == 2) {
+                $checkActivity = \App\Models\DailyActivity::where("employee_id" , $request->user()->employee->id)->whereDate("doing_date", date("Y-m-d"))->first();
+                
+                if (!$checkActivity) {
+                    throw new BadRequestHttpException("Silahkan isi checklist kebersihan terlebih dahulu.");
+                }
+            }
+
             $presence = DailyPresence::create([
                 "session" => $postdata["session"],
                 "location" => $postdata["location"],
