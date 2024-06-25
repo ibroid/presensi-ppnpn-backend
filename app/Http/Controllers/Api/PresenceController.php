@@ -62,7 +62,7 @@ class PresenceController extends Controller
                 throw new BadRequestHttpException("Anda sudah presensi diwaktu ini", null, 400);
             }
 
-            if ($postdata["session"] == 2) {
+            if ($postdata["session"] == 2 && $request->user()->employee->employee_level_id == 6) {
                 $checkActivity = \App\Models\DailyActivity::where("employee_id" , $request->user()->employee->id)->whereDate("doing_date", date("Y-m-d"))->first();
                 
                 if (!$checkActivity) {
