@@ -4,13 +4,7 @@ namespace App\Filament\Resources\DailyPresenceResource\Pages;
 
 use App\Filament\Resources\DailyPresenceResource;
 use Filament\Actions;
-use Filament\Actions\StaticAction;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Infolists\Components\Tabs;
-use Filament\Resources\Components\Tab;
-use Filament\Support\Colors\Color;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListDailyPresences extends ListRecords
