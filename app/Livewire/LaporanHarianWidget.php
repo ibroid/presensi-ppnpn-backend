@@ -16,49 +16,50 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Filters\Filter;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
-use Termwind\Enums\Color;
 
 class LaporanHarianWidget extends BaseWidget
 {
+    protected static ?string $model = Employee::class;
+
     public function table(Table $table): Table
     {
         return $table
-            ->query(function () {
-                $selectRaw = "(select present_time from daily_present where date(present_date) = ? and session = ? and daily_present.employee_id = employees.id)";
-
-                $masuk = Str::replaceArray('?', [date("Y-m-d"), 1], $selectRaw);
-                $pulang = Str::replaceArray('?', [date("Y-m-d"), 2], $selectRaw);
-
-                return Employee::select('employees.*')
-                    ->selectRaw("$masuk as masuk, $pulang as pulang")
-                    ->orderBy('masuk', 'asc')
-                    ->where('employee_level_id', '>', 5);
+            ->query(function (Builder $query) {
+                return Employee::query()->with(["daily_present" => function ($q) {
+                    $q->whereDate("present_date", today());
+                }])->where("employee_level_id", ">", 5);
             })
             ->columns([
                 TextColumn::make('no')->rowIndex()->default('#'),
                 ImageColumn::make('photos')->label("Foto"),
                 TextColumn::make('fullname')->label('Nama Lengkap'),
-                TextColumn::make('masuk')->badge()->color(fn ($state) => $state == "Belum Absen" ? "danger" : "success")->default("Belum Absen"),
-                TextColumn::make('pulang')->badge()->color(fn ($state) => $state == "Belum Absen" ? "warning" : "info")->default("Belum Absen"),
+                TextColumn::make('masuk')
+                    ->getStateUsing(function ($record) {
+                        return $record->daily_present[0]->present_time ?? "Belum Absen";
+                    })
+                    ->badge()
+                    ->color(fn ($state) => $state == "Belum Absen" ? "danger" : "success"),
+                TextColumn::make('pulang')
+                    ->getStateUsing(function ($record) {
+                        return $record->daily_present[1]->present_time ?? "Belum Absen";
+                    })
+                    ->badge()
+                    ->color(fn ($state) => $state == "Belum Absen" ? "warning" : "info"),
+                TextColumn::make('lokasi')->view("filament.pages.laporan_harian.column-lokasi")
             ])
             ->heading("Tanggal " . Date::now()->format("d F Y"))
             ->filters([
                 Filter::make('Tanggal Presensi')->form([
                     DatePicker::make('selected_present_date')
-                ])->baseQuery(function (Builder $query, array $data): Builder {
+                ])->modifyBaseQueryUsing(function (Builder $query, array $data): Builder {
                     return $query
                         ->when(
                             $data['selected_present_date'],
-                            function (Builder $query, $date): Builder {
-                                $selectRaw = "(select present_time from daily_present where date(present_date) = date('$date') and session = ? and daily_present.employee_id = employees.id)";
-
-                                $masuk = Str::replace('?', 1, $selectRaw);
-                                $pulang = Str::replace('?', 2, $selectRaw);
-
-                                return $query->select('employees.*')->selectRaw("$masuk as masuk, $pulang as pulang")
-                                    ->orderBy('masuk', 'asc')
-                                    ->where('employee_level_id', '>', 5);
-                            },
+                            function (Builder $query, $date) {
+                                $query->with(["daily_present" => function ($q) use ($date) {
+                                    $q->whereDate("present_date", $date);
+                                }])->where("employee_level_id", ">", 5);
+                            }
                         );
                 })
             ])
