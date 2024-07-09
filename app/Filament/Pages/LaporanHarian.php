@@ -2,14 +2,15 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Exports\LaporanHarianExporter;
 use App\Livewire\LaporanHarianWidget;
+use App\Models\Employee;
 use App\Report\PresenceReport;
 use Filament\Pages\Page;
-use pxlrbt\FilamentExcel\Actions\Pages\ExportAction;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Builder;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Illuminate\Http\Request;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class LaporanHarian extends Page
 {
@@ -32,35 +33,58 @@ class LaporanHarian extends Page
         ];
     }
 
-
-    protected function getHeaderActions(): array
-    {
-        return [
-
-            // ->columnMapping(false)
-            // ->modifyQueryUsing(function (Builder $query) {
-            //     $selectRaw = "(select present_time from daily_present where date(present_date) = date('2024-07-01') and session = ? and daily_present.employee_id = employees.id)";
-
-            //     $masuk = Str::replace('?', 1, $selectRaw);
-            //     $pulang = Str::replace('?', 2, $selectRaw);
-
-            //     return $query->select('employees.*')->selectRaw("$masuk as masuk, $pulang as pulang")
-            //         ->orderBy('masuk', 'asc')
-            //         ->where('employee_level_id', '>', 5);
-            // })
-            // ->fileName(fn (): string => "test.csv"),
-        ];
-    }
-
-    protected function getHeaderWidgets(): array
+    protected function getFooterWidgets(): array
     {
         return [
             LaporanHarianWidget::class
         ];
     }
 
-    public function getHeaderWidgetsColumns(): int | array
+    public function getFooterWidgetsColumns(): int | array
     {
         return 1;
+    }
+
+    public function export(Request $request)
+    {
+        $data = Employee::with("employee_level")->with(
+            ["daily_present" => function (Builder $q) use ($request) {
+                $q->whereDate("present_date", $request->tanggal);
+            }]
+        )->where("employee_level_id", ">", 5)->get();
+
+        $template = new TemplateProcessor(
+            Storage::disk('templ')->path("doc/template_laporan_harian.docx")
+        );
+
+        $template->setValue("tanggal", Date::parse($request->tanggal)->format("D F Y"));
+
+        $datamapping = $data->map(function ($item, int $i) {
+            return [
+                "no" => $i + 1,
+                "nama_lengkap" => $item->fullname,
+                "jabatan" => $item->employee_level->level_name,
+                "masuk" => $item->daily_present[0]->present_time ?? null,
+                "pulang" => $item->daily_present[1]->present_time ?? null,
+                "total" => (function () use ($item) {
+                    if (isset($item->daily_present[1]->present_time)) {
+                        $start = Date::parse($item->daily_present[0]->present_date . " " . $item->daily_present[0]->present_time);
+
+                        $end = Date::parse($item->daily_present[1]->present_date . " " . $item->daily_present[1]->present_time);
+
+                        return $start->diff($end)->format("%h Jam, %I menit");
+                    }
+                })(),
+                "ket" => "",
+            ];
+        })->all();
+
+        $template->cloneRowAndSetValues('no', $datamapping);
+
+        $filename = "Laporan_Harian_" . str_replace("-", "_", $request->tanggal) . ".docx";
+        $fullpath = Storage::disk("templ")->path($filename);
+        $template->saveAs($fullpath);
+
+        return response()->download($fullpath)->deleteFileAfterSend(true);
     }
 }

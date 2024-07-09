@@ -63,19 +63,6 @@ class LaporanHarianWidget extends BaseWidget
                         );
                 })
             ])
-            ->headerActions(
-                [
-                    ExportAction::make('Print')
-                        ->icon('heroicon-o-printer')
-                        ->exports([
-                            ExcelExport::make('Print')
-                                ->withFilename("laporan_presensi_harian")
-                                ->withWriterType(\Maatwebsite\Excel\Excel::XLSX)
-                                ->fromTable()
-                                ->except(["no", "photos"])
-                        ]),
-                ]
-            )
             ->paginated(false);
     }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Filament\Pages\LaporanHarian;
 use App\Http\Controllers\Welcome;
 use Illuminate\Support\Facades\Route;
 
@@ -15,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', Welcome::class);
+
+Route::prefix('/admin')->group(function () {
+  Route::post('/laporan-harian/export', [LaporanHarian::class, "export"]);
+});
