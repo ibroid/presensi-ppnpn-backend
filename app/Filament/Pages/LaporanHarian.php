@@ -57,7 +57,7 @@ class LaporanHarian extends Page
             Storage::disk('templ')->path("doc/template_laporan_harian.docx")
         );
 
-        $template->setValue("tanggal", Date::parse($request->tanggal)->format("D F Y"));
+        $template->setValue("tanggal", Date::parse($request->tanggal)->format("d F Y"));
 
         $datamapping = $data->map(function ($item, int $i) {
             return [

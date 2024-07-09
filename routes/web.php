@@ -1,7 +1,9 @@
 <?php
 
+use App\Filament\Pages\LaporanBulanan;
 use App\Filament\Pages\LaporanHarian;
 use App\Http\Controllers\Welcome;
+use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,4 +21,5 @@ Route::get('/', Welcome::class);
 
 Route::prefix('/admin')->group(function () {
   Route::post('/laporan-harian/export', [LaporanHarian::class, "export"]);
+  Route::post('/laporan-bulanan/export', [LaporanBulanan::class, "export"]);
 });
