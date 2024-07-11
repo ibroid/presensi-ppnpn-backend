@@ -30,4 +30,14 @@ class Employee extends Model
     {
         return $this->hasMany(DailyPresence::class);
     }
+
+    /**
+     * Retrieve the daily activity records for this employee.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function daily_activity()
+    {
+        return $this->hasMany(DailyActivity::class);
+    }
 }
