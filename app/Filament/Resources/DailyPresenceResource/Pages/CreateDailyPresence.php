@@ -13,7 +13,7 @@ class CreateDailyPresence extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['present_date'] = date("Y-m-d");
-        $data['location'] = "KANTOR";
+        $data['location'] = "-6.1299253 106.9093767";
         return $data;
     }
 

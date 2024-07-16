@@ -24,8 +24,19 @@ class RegisterPostRequest extends FormRequest
         return [
             "name" => "required|string|max:64",
             "employee_id" => "required|numeric",
-            "password" => "required|string|max:64",
-            "identifier" => "required|string|max:16|unique:users,identifier",
+            "password" => "required|string|max:64|min:3",
+            "identifier" => "required|string|max:16|unique:users,identifier|min:3",
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            "password.min" => "Password Minimal :min karakter",
+            "password.max" => "Password Maksimal :max karakter",
+            "name.max" => "Nama Maksimal :max karakter",
+            "identifier.max" => "Nomor Telepon Maksimal :max karakter",
+            "identifier.min" => "Nomor Telepon Minimal :min karakter",
         ];
     }
 }

@@ -22,7 +22,7 @@ class PresenceController extends Controller
             $queryPresence = DailyPresence::where([
                 "employee_id" => $request->user()->employee->id,
             ]);
-            if ($request->get("date")) {
+            if ($request->has("date")) {
                 $queryPresence->whereDate("present_date", explode("T", $request->get("date"))[0]);
             } else {
                 $queryPresence->whereDate("present_date", now());
@@ -63,8 +63,8 @@ class PresenceController extends Controller
             }
 
             if ($postdata["session"] == 2 && $request->user()->employee->employee_level_id == 6) {
-                $checkActivity = \App\Models\DailyActivity::where("employee_id" , $request->user()->employee->id)->whereDate("doing_date", date("Y-m-d"))->first();
-                
+                $checkActivity = \App\Models\DailyActivity::where("employee_id", $request->user()->employee->id)->whereDate("doing_date", date("Y-m-d"))->first();
+
                 if (!$checkActivity) {
                     throw new BadRequestHttpException("Silahkan isi checklist kebersihan terlebih dahulu.");
                 }

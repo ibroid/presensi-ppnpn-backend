@@ -23,11 +23,11 @@ class LoginController extends Controller
             $user = User::with("employee.employee_level")->with("role")->where("identifier", "=", $data["phone"])->first();
 
             if (!$user) {
-                throw new NotFoundHttpException("User not found", null, 404);
+                throw new NotFoundHttpException("User tidak ditemukan", null, 404);
             }
 
             if (!password_verify($data["password"], $user->password)) {
-                throw new BadRequestHttpException("Wrong password", null, 400);
+                throw new BadRequestHttpException("Password Salah. Coba ingat lagi", null, 400);
             }
 
             return $this->tokenResponse($user->createToken("authToken")->plainTextToken, $user);
