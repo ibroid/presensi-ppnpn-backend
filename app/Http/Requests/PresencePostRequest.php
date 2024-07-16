@@ -25,7 +25,7 @@ class PresencePostRequest extends FormRequest
             "session" => "required|numeric",
             "location" => "required|string|max:64",
             "present_date" => "required|string|max:16",
-            "status" => "numeric|max:2",
+            "status" => "numeric",
         ];
     }
 }
