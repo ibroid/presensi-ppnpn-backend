@@ -47,7 +47,7 @@ class ActivityController extends Controller
                 "doing" => $postdata["doing"],
                 "employee_id" => $request->user()->employee->id,
                 "doing_date" => date("Y-m-d"),
-                "doing_time" => date("H:i:s"),
+                "doing_time" => $postdata['doing_time'],
                 "note" => $postdata["note"],
             ]);
 
