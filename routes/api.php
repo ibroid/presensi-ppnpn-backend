@@ -1,7 +1,11 @@
 <?php
 
+use App\Filament\Pages\LaporanBulanan;
+use App\Http\Controllers\Api\LaporanController;
+use App\Http\Controllers\Api\MonitorPresence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +43,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::resource("/presence", App\Http\Controllers\Api\PresenceController::class);
     Route::resource("/activity", App\Http\Controllers\Api\ActivityController::class);
+
+    Route::get("/employee/picture", App\Http\Controllers\Api\PictureProxyController::class);
+
+    Route::get("monitor", MonitorPresence::class);
+    Route::prefix("laporan")->group(function () {
+        Route::post("periode", [LaporanController::class, 'periode']);
+        Route::post("periode_activity", [LaporanController::class, 'activity']);
+    });
 });

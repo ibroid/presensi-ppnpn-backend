@@ -16,7 +16,8 @@
         "laravel/tinker": "^2.8",
         "phpoffice/phpword": "^1.2",
         "psr/simple-cache": "^2.0",
-        "pxlrbt/filament-excel": "^2.3"
+        "pxlrbt/filament-excel": "^2.3",
+        "ralouphie/mimey": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9",

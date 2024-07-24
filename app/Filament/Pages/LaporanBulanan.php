@@ -2,7 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\DailyPresence;
 use App\Models\Employee;
+use App\Report\PresenceReport;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -30,24 +32,10 @@ class LaporanBulanan extends Page
 
     public function export(Request $request)
     {
-        $dateRange = Collection::make();
-        $firstDate = date("Y-m-01", strtotime($request->tahun . "-" . $request->bulan . "-01"));
 
-        $lastDate = date("Y-m-t", strtotime($request->tahun . "-" . $request->bulan . "-01"));
+        $data = PresenceReport::monthlyData($request->bulan ?? date("m"), $request->tahun ?? date("Y"), $request->employee_id);
 
-        $current = $firstDate;
-        while ($current <= $lastDate) {
-            $dateRange->push(Date::parse($current));
-            $current = date("Y-m-d", strtotime("+1 day", strtotime($current)));
-        }
-
-        $data = Employee::with("employee_level")
-            ->with(["daily_present" => function (Builder $q) use ($request) {
-                $q
-                    ->whereMonth("present_date", $request->bulan)
-                    ->whereYear("present_date", $request->tahun);
-            }])
-            ->find($request->employee_id);
+        $dateRange = PresenceReport::dateRangeMonth($request->bulan, $request->tahun);
 
         $template = new TemplateProcessor(Storage::disk("templ")->path("doc/template_laporan_bulanan.docx"));
 
@@ -83,7 +71,7 @@ class LaporanBulanan extends Page
                 "masuk" => $masuk->present_time ?? null,
                 "pulang" => $pulang->present_time ?? null,
                 "total" => $diffStr ?? null,
-                "ket" => ""
+                "ket" => DailyPresence::keteranganList($masuk->status ?? 0)
             ];
         })->all());
         $totalHours = floor($totalMinutes / 60); // Menghitung total jam
@@ -97,6 +85,7 @@ class LaporanBulanan extends Page
         $fullpath = Storage::disk("templ")->path($filename);
         $template->saveAs($fullpath);
 
-        return response()->download($fullpath)->deleteFileAfterSend(true);
+        // return response()->download($fullpath)->deleteFileAfterSend(true);
+        return Storage::disk("templ")->get($filename);
     }
 }

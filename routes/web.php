@@ -4,7 +4,6 @@ use App\Filament\Pages\LaporanAktivitas;
 use App\Filament\Pages\LaporanBulanan;
 use App\Filament\Pages\LaporanHarian;
 use App\Http\Controllers\Welcome;
-use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Route;
 
 /*

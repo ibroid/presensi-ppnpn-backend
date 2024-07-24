@@ -29,7 +29,7 @@ class LaporanHarian extends Page
     public function getViewData(): array
     {
         return [
-            "presence" => PresenceReport::data(request('date') ?? date('Y-m-d'))
+            "presence" => PresenceReport::dailyData(request('date') ?? date('Y-m-d'))
         ];
     }
 

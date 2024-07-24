@@ -17,4 +17,18 @@ class DailyPresence extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
+
+    public static function keteranganList($index)
+    {
+        $data = [
+            "Nihil",
+            "Hadir",
+            "Cuti",
+            "Sakit",
+            "Ijin",
+            "Dinas Luar",
+        ];
+
+        return $data[$index] ?? null;
+    }
 }
