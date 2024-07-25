@@ -85,7 +85,6 @@ class LaporanBulanan extends Page
         $fullpath = Storage::disk("templ")->path($filename);
         $template->saveAs($fullpath);
 
-        // return response()->download($fullpath)->deleteFileAfterSend(true);
-        return Storage::disk("templ")->get($filename);
+        return response()->download($fullpath)->deleteFileAfterSend(true);
     }
 }
