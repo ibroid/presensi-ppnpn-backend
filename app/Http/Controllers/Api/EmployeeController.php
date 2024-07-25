@@ -13,7 +13,7 @@ class EmployeeController extends Controller
     public function list()
     {
         try {
-            return response()->json(Employee::where("employee_level_id", ">", 5)->get());
+            return response()->json(Employee::with('employee_level')->where("employee_level_id", ">", 5)->get());
         } catch (\Throwable $th) {
             return $this->errorResponse($th, intval($th->getCode()));
         }

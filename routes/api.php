@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource("/activity", App\Http\Controllers\Api\ActivityController::class);
 
     Route::get("/employee/picture", App\Http\Controllers\Api\PictureProxyController::class);
+    Route::post("/employee/picture", App\Http\Controllers\Api\PictureProxyController::class);
 
     Route::get("monitor", MonitorPresence::class);
     Route::prefix("laporan")->group(function () {
