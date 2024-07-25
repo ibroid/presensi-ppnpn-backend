@@ -23,7 +23,7 @@ class PresenceReport
    */
   public static function dailyData(string $date): Collection
   {
-    $selectRaw = "(select present_time from daily_present where date(present_date) = ? and session = ? and daily_present.employee_id = employees.id)";
+    $selectRaw = "(select present_time from daily_present where date(present_date) = '?' and session = ? and daily_present.employee_id = employees.id)";
 
     $masuk = Str::replaceArray('?', [$date, 1], $selectRaw);
     $pulang = Str::replaceArray('?', [$date, 2], $selectRaw);

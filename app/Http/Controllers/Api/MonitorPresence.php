@@ -11,7 +11,7 @@ class MonitorPresence extends Controller
     public function __invoke(Request $request)
     {
         try {
-            $data['list'] = PresenceReport::dailyData($request->get('date') ?? date("Y-m-d"));
+            $data['list'] = PresenceReport::dailyData($request->date ?? date("Y-m-d"));
 
             $data['total_sudah'] = $data['list']->filter(function ($item) {
                 return $item->masuk !== null;
