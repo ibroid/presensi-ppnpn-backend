@@ -19,7 +19,7 @@ class LaporanController extends Controller
             $data = PresenceReport::monthlyData(
                 $request->bulan ?? date("m"),
                 $request->tahun ?? date("Y"),
-                $request->user()->employee->id
+                $request->employee_id ?? $request->user()->employee->id
             );
 
             $dateRange = PresenceReport::dateRangeMonth(
